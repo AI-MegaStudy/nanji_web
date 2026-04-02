@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'viewmodels/dashboard_viewmodel.dart';
-import 'views/dashboard_screen.dart';
+import 'VM/dashboard_viewmodel.dart';
+import 'View/dashboard_screen.dart';
 
 void main() {
   runApp(const MyApp());

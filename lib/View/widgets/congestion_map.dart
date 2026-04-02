@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/dashboard_viewmodel.dart';
+import '../../VM/dashboard_viewmodel.dart';
 
 class CongestionMap extends StatelessWidget {
   const CongestionMap({super.key});

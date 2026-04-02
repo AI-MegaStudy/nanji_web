@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/parking_models.dart';
+import '../Model/parking_models.dart';
 
 class DashboardViewModel extends ChangeNotifier {
   List<Park> _parks = [];

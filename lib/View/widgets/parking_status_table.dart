@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/dashboard_viewmodel.dart';
+import '../../VM/dashboard_viewmodel.dart';
 
 class ParkingStatusTable extends StatelessWidget {
   const ParkingStatusTable({super.key});
@@ -10,10 +10,9 @@ class ParkingStatusTable extends StatelessWidget {
     final viewModel = Provider.of<DashboardViewModel>(context);
     final parkingLots = viewModel.selectedPark?.parkingLots ?? [];
 
-    return Card(
-      margin: const EdgeInsets.all(16.0),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

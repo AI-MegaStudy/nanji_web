@@ -15,11 +15,22 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => DashboardViewModel(),
       child: MaterialApp(
-        title: 'Nanji Parking Dashboard',
+        title: '한강공원 주차장 예측',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
           useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF1E5AC7),
+            brightness: Brightness.light,
+          ),
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
+            centerTitle: false,
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.white,
+          ),
+          scaffoldBackgroundColor: const Color(0xFFF8F9FA),
         ),
+        debugShowCheckedModeBanner: false,
         home: const DashboardScreen(),
       ),
     );

@@ -74,7 +74,7 @@ class ParkingStatusTable extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        '${availableSpaces}자리',
+                        '$availableSpaces자리',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                           color: _getAvailabilityColor(availableSpaces, lot.totalSpaces),
                           fontWeight: FontWeight.w600,

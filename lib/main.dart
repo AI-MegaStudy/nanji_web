@@ -1,38 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'VM/dashboard_viewmodel.dart';
-import 'View/dashboard_screen.dart';
+import 'View/admin_shell.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const NanjiAdminApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class NanjiAdminApp extends StatelessWidget {
+  const NanjiAdminApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => DashboardViewModel(),
-      child: MaterialApp(
-        title: '한강공원 주차장 예측',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF1E5AC7),
-            brightness: Brightness.light,
-          ),
-          appBarTheme: const AppBarTheme(
-            elevation: 0,
-            centerTitle: false,
-            surfaceTintColor: Colors.transparent,
-            backgroundColor: Colors.white,
-          ),
-          scaffoldBackgroundColor: const Color(0xFFF8F9FA),
+    return MaterialApp(
+      title: '자리난지 관리자 대시보드',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFB5E0F5),
+          brightness: Brightness.light,
         ),
-        debugShowCheckedModeBanner: false,
-        home: const DashboardScreen(),
+        scaffoldBackgroundColor: const Color(0xFFF3F4F6),
+        fontFamily: 'Pretendard',
       ),
+      home: const AdminShell(),
     );
   }
 }

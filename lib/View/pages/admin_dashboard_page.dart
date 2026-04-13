@@ -265,9 +265,7 @@ class _TopStatsGrid extends StatelessWidget {
   }
 
   String _metricValue(AdminMetric metric) {
-    if (metric.label == '오늘 방문자') return '${metric.value}명';
-    if (metric.label == '즐겨찾기') return '${metric.value}건';
-    return '${metric.value}회';
+    return metric.value;
   }
 }
 

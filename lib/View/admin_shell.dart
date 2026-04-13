@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Model/admin_models.dart';
+import '../VM/admin_auth_viewmodel.dart';
 import '../VM/admin_shell_viewmodel.dart';
 import 'pages/activity_log_page.dart';
 import 'pages/admin_dashboard_page.dart';
@@ -35,6 +36,8 @@ class _AdminShellView extends StatelessWidget {
             subtitle: vm.selectedItem.subtitle,
             autoRefresh: vm.autoRefresh,
             onToggleRefresh: vm.toggleAutoRefresh,
+            onSignOut: () => context.read<AdminAuthViewModel>().signOut(),
+            adminId: context.watch<AdminAuthViewModel>().currentAdminId,
           ),
           _TopNavBar(
             items: vm.navItems,
@@ -80,12 +83,16 @@ class _Header extends StatelessWidget {
     required this.subtitle,
     required this.autoRefresh,
     required this.onToggleRefresh,
+    required this.onSignOut,
+    required this.adminId,
   });
 
   final String title;
   final String subtitle;
   final bool autoRefresh;
   final VoidCallback onToggleRefresh;
+  final VoidCallback onSignOut;
+  final String? adminId;
 
   @override
   Widget build(BuildContext context) {
@@ -200,30 +207,70 @@ class _Header extends StatelessWidget {
                       ],
                     ),
                   ),
-                  FilledButton.icon(
-                    onPressed: onToggleRefresh,
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Colors.white.withValues(
-                        alpha: autoRefresh ? 0.72 : 0.42,
+                  Row(
+                    children: [
+                      if (adminId != null) ...[
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.52),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Text(
+                            '관리자: $adminId',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF111827),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                      ],
+                      FilledButton.icon(
+                        onPressed: onToggleRefresh,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.white.withValues(
+                            alpha: autoRefresh ? 0.72 : 0.42,
+                          ),
+                          foregroundColor: const Color(0xFF111827),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 0,
+                        ),
+                        icon: Icon(
+                          autoRefresh
+                              ? Icons.refresh_rounded
+                              : Icons.refresh_outlined,
+                        ),
+                        label: Text(
+                          autoRefresh ? '자동 새로고침 켜짐' : '자동 새로고침 꺼짐',
+                        ),
                       ),
-                      foregroundColor: const Color(0xFF111827),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 16,
+                      const SizedBox(width: 12),
+                      FilledButton.icon(
+                        onPressed: onSignOut,
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.white.withValues(alpha: 0.52),
+                          foregroundColor: const Color(0xFF111827),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          elevation: 0,
+                        ),
+                        icon: const Icon(Icons.logout_rounded),
+                        label: const Text('로그아웃'),
                       ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      elevation: 0,
-                    ),
-                    icon: Icon(
-                      autoRefresh
-                          ? Icons.refresh_rounded
-                          : Icons.refresh_outlined,
-                    ),
-                    label: Text(
-                      autoRefresh ? '자동 새로고침 켜짐' : '자동 새로고침 꺼짐',
-                    ),
+                    ],
                   ),
                 ],
               ),

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'VM/admin_auth_viewmodel.dart';
+import 'View/admin_login_page.dart';
 import 'View/admin_shell.dart';
 
 void main() {
@@ -22,7 +26,23 @@ class NanjiAdminApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFF3F4F6),
         fontFamily: 'Pretendard',
       ),
-      home: const AdminShell(),
+      home: ChangeNotifierProvider(
+        create: (_) => AdminAuthViewModel(),
+        child: const AdminAppEntry(),
+      ),
     );
+  }
+}
+
+class AdminAppEntry extends StatelessWidget {
+  const AdminAppEntry({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authVM = context.watch<AdminAuthViewModel>();
+    if (authVM.isAuthenticated) {
+      return const AdminShell();
+    }
+    return const AdminLoginPage();
   }
 }

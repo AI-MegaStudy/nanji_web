@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AdminNavItem {
-  const AdminNavItem({required this.label, required this.icon});
+  const AdminNavItem({
+    required this.label,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
 
   final String label;
   final IconData icon;
+  final String title;
+  final String subtitle;
 }
 
 class AdminMetric {
@@ -34,7 +41,8 @@ class ParkingSummaryItem {
 }
 
 class FunnelStepData {
-  const FunnelStepData({required this.label, required this.rate, required this.count});
+  const FunnelStepData(
+      {required this.label, required this.rate, required this.count});
 
   final String label;
   final int rate;

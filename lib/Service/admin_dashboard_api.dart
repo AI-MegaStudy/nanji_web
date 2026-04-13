@@ -2,6 +2,29 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+class AdminLoginResult {
+  AdminLoginResult({
+    required this.adminId,
+    required this.adminLoginId,
+    required this.adminName,
+    required this.adminRole,
+  });
+
+  final int adminId;
+  final String adminLoginId;
+  final String adminName;
+  final String adminRole;
+
+  factory AdminLoginResult.fromJson(Map<String, dynamic> json) {
+    return AdminLoginResult(
+      adminId: json['admin_id'] as int? ?? 0,
+      adminLoginId: json['admin_login_id'] as String? ?? '',
+      adminName: json['admin_name'] as String? ?? '-',
+      adminRole: json['admin_role'] as String? ?? 'admin',
+    );
+  }
+}
+
 class AdminParkingLotItem {
   AdminParkingLotItem({
     required this.id,
@@ -868,6 +891,23 @@ class AdminDashboardApi {
   static const String baseUrl = 'http://127.0.0.1:8000';
   final http.Client _client;
 
+  Future<AdminLoginResult> signInAdmin({
+    required String adminId,
+    required String password,
+  }) async {
+    final response = await _client.post(
+      Uri.parse('$baseUrl/api/v1/admin/auth/login'),
+      headers: const {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'admin_id': adminId,
+        'password': password,
+      }),
+    );
+    _ensureSuccess(response);
+    final decoded = jsonDecode(response.body) as Map<String, dynamic>;
+    return AdminLoginResult.fromJson(decoded);
+  }
+
   Future<AdminDashboardOverviewData> fetchDashboardOverview() async {
     final response = await _client.get(Uri.parse('$baseUrl/api/v1/admin/dashboard/overview'));
     _ensureSuccess(response);
@@ -929,7 +969,14 @@ class AdminDashboardApi {
 
   void _ensureSuccess(http.Response response) {
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw Exception('API 요청 실패: ${response.statusCode}');
+      String? detail;
+      try {
+        final decoded = jsonDecode(response.body);
+        if (decoded is Map<String, dynamic>) {
+          detail = decoded['detail'] as String?;
+        }
+      } catch (_) {}
+      throw Exception(detail ?? 'API 요청 실패: ${response.statusCode}');
     }
   }
 }

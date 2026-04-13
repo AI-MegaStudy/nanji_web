@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
-class AdminAuthViewModel extends ChangeNotifier {
-  static const Map<String, String> _allowedCredentials = {
-    'admin': '1111',
-  };
+import '../Service/admin_dashboard_api.dart';
 
+class AdminAuthViewModel extends ChangeNotifier {
+  AdminAuthViewModel({AdminDashboardApi? api}) : _api = api ?? AdminDashboardApi();
+
+  final AdminDashboardApi _api;
   bool _isAuthenticated = false;
   bool _isSubmitting = false;
   String? _errorMessage;
   String? _currentAdminId;
+  String? _currentAdminName;
+  String? _currentAdminRole;
 
   bool get isAuthenticated => _isAuthenticated;
   bool get isSubmitting => _isSubmitting;
   String? get errorMessage => _errorMessage;
   String? get currentAdminId => _currentAdminId;
+  String? get currentAdminName => _currentAdminName;
+  String? get currentAdminRole => _currentAdminRole;
 
   Future<bool> signIn({
     required String adminId,
@@ -31,21 +36,24 @@ class AdminAuthViewModel extends ChangeNotifier {
     _isSubmitting = true;
     notifyListeners();
 
-    await Future<void>.delayed(const Duration(milliseconds: 350));
-
-    final expectedPassword = _allowedCredentials[trimmedId];
-    if (expectedPassword == null || expectedPassword != password) {
+    try {
+      final result = await _api.signInAdmin(
+        adminId: trimmedId,
+        password: password.trim(),
+      );
       _isSubmitting = false;
-      _errorMessage = '관리자 계정 정보가 올바르지 않습니다.';
+      _isAuthenticated = true;
+      _currentAdminId = result.adminLoginId;
+      _currentAdminName = result.adminName;
+      _currentAdminRole = result.adminRole;
+      notifyListeners();
+      return true;
+    } catch (error) {
+      _isSubmitting = false;
+      _errorMessage = error.toString().replaceFirst('Exception: ', '');
       notifyListeners();
       return false;
     }
-
-    _isSubmitting = false;
-    _isAuthenticated = true;
-    _currentAdminId = trimmedId;
-    notifyListeners();
-    return true;
   }
 
   void signOut() {
@@ -53,6 +61,8 @@ class AdminAuthViewModel extends ChangeNotifier {
     _isSubmitting = false;
     _errorMessage = null;
     _currentAdminId = null;
+    _currentAdminName = null;
+    _currentAdminRole = null;
     notifyListeners();
   }
 }
